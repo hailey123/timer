@@ -1,0 +1,21 @@
+{
+  "name": "timer",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/startElectron.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "electron": "electron ."
+  },
+  "dependencies": {
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-scripts": "1.1.4"
+  },
+  "devDependencies": {
+    "electron": "^1.8.4"
+  }
+}
