@@ -34,19 +34,19 @@ class App extends Component {
         <ReactCountdownClock seconds={ timeSegments[currentSegment].length }
           color='#000'
           alpha={ 0.9 }
-          size={ 200 }
+          size={ 160 }
           timeFormat='hms'
           onComplete={ () => alert('Done!') } />
         <div className='btnContainer'>
           <button className='btn'>Pause</button>
           <button className='btn'>Reset</button>
+          <button className='btn'
+            onClick = { () => this.setState({
+              currentSegment: nextSegment
+            }) }>
+            Next
+          </button>
         </div>
-        <button className='btn wide'
-          onClick = { () => this.setState({
-            currentSegment: nextSegment
-          }) }>
-          { 'Skip to ' + timeSegments[nextSegment].name }
-        </button>
       </div>
     );
   }
