@@ -1,8 +1,6 @@
-.App {
-  padding: 5px;
-}
-
 .Countdown {
+  height: 170px;
+  width: 170px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,6 +17,5 @@
 }
 
 .btnContainer {
-  padding: 5px 0;
   display: flex;
 }

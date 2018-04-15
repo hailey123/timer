@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactCountdownClock from 'react-countdown-clock'
 
 import logo from './logo.svg'
 import './App.css'
@@ -38,6 +37,13 @@ class App extends Component {
       }
     }, 1000)
   }
+  formatTime = timeRemaining => {
+    const date = new Date(null)
+    date.setSeconds(timeRemaining)
+    return timeRemaining >= 3600
+      ? date.toISOString().substr(12, 7)
+      : date.toISOString().substr(14, 5)
+  }
   render() {
     const {
       currentSegment,
@@ -48,8 +54,8 @@ class App extends Component {
     const nextSegment = (currentSegment + 1) % numSegments
     return (
       <div className='App'>
-        <div class='Countdown'>
-          <h1>{ timeRemaining }</h1>
+        <div className='Countdown'>
+          <h1>{ this.formatTime(timeRemaining) }</h1>
         </div>
         <div className='btnContainer'>
           <button className='btn'

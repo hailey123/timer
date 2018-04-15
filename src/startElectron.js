@@ -12,7 +12,7 @@ let mainWindow;
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 170,
-    height: 220,
+    height: 218,
     // resizable: false,
     alwaysOnTop: true
   });
