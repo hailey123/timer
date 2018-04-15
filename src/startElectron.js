@@ -12,13 +12,14 @@ let mainWindow;
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 300,
-    height: 300
+    height: 300,
+    resizable: false
   });
 
   // Load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000');
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
       mainWindow = null
