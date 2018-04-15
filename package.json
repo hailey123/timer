@@ -8,7 +8,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "electron": "electron .",
+    "electron:dev": "set ELECTRON_START_URL=http://localhost:3000 && electron ."
   },
   "dependencies": {
     "react": "^16.3.1",

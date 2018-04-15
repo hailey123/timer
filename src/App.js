@@ -28,7 +28,6 @@ class App extends Component {
     this.setState({
       timeRemaining: timeSegments[this.state.currentSegment].length
     })
-    // TODO: remove the timer on close
     this.interval = setInterval(() => {
       const { currentSegment, timeRemaining } = this.state
       if (!this.state.timerPaused) {
