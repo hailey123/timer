@@ -1,0 +1,13 @@
+.App {
+  padding: 5px;
+}
+
+.btn {
+  flex: 1;
+  height: 20px;
+}
+
+.btnContainer {
+  padding: 5px 0;
+  display: flex;
+}

@@ -11,8 +11,8 @@ const { app, BrowserWindow, Tray } = electron
 let mainWindow;
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 300,
-    height: 300,
+    width: 210,
+    height: 255,
     resizable: false
   });
 
