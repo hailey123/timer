@@ -20,25 +20,36 @@ class App extends Component {
         length: DEFAULT_BREAK_TIME
       }
     ],
-    currentSegment: 0
+    currentSegment: 0,
+    timerPaused: false
   }
   render() {
     const {
       timeSegments,
-      currentSegment
+      currentSegment,
+      timerPaused
     } = this.state
     const numSegments = timeSegments.length
     const nextSegment = (currentSegment + 1) % numSegments
     return (
       <div className='App'>
-        <ReactCountdownClock seconds={ timeSegments[currentSegment].length }
+        <ReactCountdownClock
+          seconds={ timeSegments[currentSegment].length }
           color='#000'
           alpha={ 0.9 }
           size={ 160 }
           timeFormat='hms'
+          paused={ timerPaused }
           onComplete={ () => alert('Done!') } />
         <div className='btnContainer'>
-          <button className='btn'>Pause</button>
+          <button className='btn'
+            onClick={ () => {
+              this.setState({
+                timerPaused: !timerPaused
+              })
+            } }>
+            { timerPaused ? 'Resume' : 'Pause' }
+          </button>
           <button className='btn'>Reset</button>
           <button className='btn'
             onClick = { () => this.setState({

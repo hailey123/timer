@@ -5,6 +5,7 @@
 .btn {
   flex: 1;
   height: 25px;
+  padding: 0;
 }
 
 .btn.wide {
