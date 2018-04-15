@@ -4,7 +4,11 @@
 
 .btn {
   flex: 1;
-  height: 20px;
+  height: 25px;
+}
+
+.btn.wide {
+  width: 100%;
 }
 
 .btnContainer {
