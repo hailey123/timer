@@ -29,13 +29,34 @@ class App extends Component {
       timeRemaining: timeSegments[this.state.currentSegment].length
     })
     // TODO: remove the timer on close
-    setInterval(() => {
+    this.interval = setInterval(() => {
+      const { currentSegment, timeRemaining } = this.state
       if (!this.state.timerPaused) {
-        this.setState({
-          timeRemaining: this.state.timeRemaining - 1
-        })
+        if (timeRemaining > 0) {
+          this.setState({
+            timeRemaining: timeRemaining - 1
+          })
+        } else {
+          this.goToNextInterval()
+        }
       }
     }, 1000)
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval)
+  }
+  getCurrentIntervalLength = () => {
+    const { currentSegment } = this.state
+    return timeSegments[currentSegment].length
+  }
+  goToNextInterval = () => {
+    const { currentSegment } = this.state
+    const numSegments = timeSegments.length
+    const nextSegment = (currentSegment + 1) % numSegments
+    this.setState({
+      currentSegment: nextSegment,
+      timeRemaining: timeSegments[nextSegment].length
+    })
   }
   formatTime = timeRemaining => {
     const date = new Date(null)
@@ -44,17 +65,28 @@ class App extends Component {
       ? date.toISOString().substr(12, 7)
       : date.toISOString().substr(14, 5)
   }
+  calculateCompletionPercentage = () => {
+    const { currentSegment, timeRemaining } = this.state
+    return timeRemaining / this.getCurrentIntervalLength() * 100
+  }
   render() {
     const {
       currentSegment,
       timerPaused,
       timeRemaining
     } = this.state
-    const numSegments = timeSegments.length
-    const nextSegment = (currentSegment + 1) % numSegments
+    const completionPercentatage = this.calculateCompletionPercentage()
     return (
       <div className='App'>
-        <div className='Countdown'>
+        <div className='Countdown'
+          style={ {
+            background: `linear-gradient(
+              to bottom,
+              rgb(0, 51, 102),
+              rgb(0, 51, 102) ${ completionPercentatage }%,
+              rgb(0, 0, 102) ${ completionPercentatage }%
+            )`
+          } }>
           <h1>{ this.formatTime(timeRemaining) }</h1>
         </div>
         <div className='btnContainer'>
@@ -71,10 +103,7 @@ class App extends Component {
             }) }>
             Reset</button>
           <button className='btn'
-            onClick = { () => this.setState({
-              currentSegment: nextSegment,
-              timeRemaining: timeSegments[nextSegment].length
-            }) }>
+            onClick = { this.goToNextInterval }>
             Next
           </button>
         </div>
