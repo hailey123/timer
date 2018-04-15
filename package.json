@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "react": "^16.3.1",
-    "react-countdown-clock": "^2.4.0",
     "react-dom": "^16.3.1",
     "react-scripts": "1.1.4"
   },

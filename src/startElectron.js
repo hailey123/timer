@@ -13,7 +13,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 170,
     height: 220,
-    resizable: false,
+    // resizable: false,
     alwaysOnTop: true
   });
 
