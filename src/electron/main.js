@@ -48,8 +48,8 @@ const getNextIntervalIndex = () => (currentInterval + 1) % intervals.length
 
 const showCompletionNotification = () =>
   new Notification({
-    title: `${ intervals[currentInterval].title } complete! ` +
-      `Starting ${ intervals[getNextIntervalIndex()].title } segment.`
+    title: `${ intervals[currentInterval].title } complete! Starting ` +
+      `${ intervals[getNextIntervalIndex()].title.toLowerCase() } segment.`
   }).show()
 
 const createInterval = () =>
@@ -79,16 +79,20 @@ const buildTray = () => {
 }
 
 const sendTime = () => {
-  mainWindow.webContents.send('time', {
-    timeRemaining,
-    intervalLength: intervals[currentInterval].length
-  })
+  if (mainWindow) {
+    mainWindow.webContents.send('time', {
+      timeRemaining,
+      intervalLength: intervals[currentInterval].length
+    })
+  }
 }
 
 const sendPaused = () => {
-  mainWindow.webContents.send('play-pause', {
-    timerPaused: paused
-  })
+  if (mainWindow) {
+    mainWindow.webContents.send('play-pause', {
+      timerPaused: paused
+    })
+  }
 }
 
 const nextInterval = () => {
@@ -121,7 +125,7 @@ app.on('activate', function () {
 })
 
 ipcMain.on('reset', () => {
-  timeRemaining = intervals[currentInterval]
+  timeRemaining = intervals[currentInterval].length
   sendTime()
   paused = true
   sendPaused()
