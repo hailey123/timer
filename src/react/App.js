@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 
+import {
+  formatTime,
+  calculateIntervalCompletionPercentage
+} from '../common/timeUtils'
 import './App.css'
 
 /* Electron */
@@ -15,9 +19,6 @@ class App extends Component {
       this.setState({ timeRemaining, intervalLength })
     })
   }
-  componentWillUnmount() {
-    clearInterval(this.interval)
-  }
   handlePlayPauseClick = () => {
     ipcRenderer.send('play-pause')
   }
@@ -27,21 +28,12 @@ class App extends Component {
   handleNextClick = () => {
     ipcRenderer.send('next')
   }
-  getFormattedTime = () => {
-    const { timeRemaining } = this.state
-    const date = new Date(null)
-    date.setSeconds(timeRemaining)
-    return timeRemaining >= 3600
-      ? date.toISOString().substr(12, 7)
-      : date.toISOString().substr(14, 5)
-  }
-  calculateCompletionPercentage = () => {
-    const { timeRemaining, intervalLength } = this.state
-    return timeRemaining / intervalLength * 100
-  }
   render() {
-    const { timerPaused } = this.state
-    const completionPercentatage = this.calculateCompletionPercentage()
+    const { intervalLength, timerPaused, timeRemaining } = this.state
+    const completionPercentatage = calculateIntervalCompletionPercentage(
+      timeRemaining,
+      intervalLength
+    )
     return (
       <div className='App'>
         <div className='Countdown'
@@ -53,7 +45,7 @@ class App extends Component {
               rgb(0, 0, 102) ${ completionPercentatage }%
             )`
           } }>
-          <h1>{ this.getFormattedTime() }</h1>
+          <h1>{ formatTime(timeRemaining) }</h1>
         </div>
         <div className='btnContainer'>
           <button className='btn'
