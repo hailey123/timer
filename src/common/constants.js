@@ -1,4 +1,14 @@
+const ONE_MINUTE = 60
+
 module.exports = {
-  DEFAULT_WORK_TIME: 3600, // 3000 seconds in 50 minutes
-  DEFAULT_BREAK_TIME: 600 // 600 seconds in 10 minutes
+  intervals: [
+    {
+      title: 'Work',
+      length: 50 * ONE_MINUTE
+    },
+    {
+      title: 'Break',
+      length: 10 * ONE_MINUTE
+    }
+  ]
 }

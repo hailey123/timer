@@ -4,23 +4,20 @@ const electron = require('electron')
 const path = require('path')
 const url = require('url')
 const { formatTime } = require('../common/timeUtils')
-const constants = require('../common/constants')
+const { intervals } = require('../common/constants')
 
 const {
   app,
   BrowserWindow,
   ipcMain,
   Menu,
+  Notification,
   Tray
 } = electron
 
-const intervals = [
-  constants.DEFAULT_WORK_TIME,
-  constants.DEFAULT_BREAK_TIME
-]
 let currentInterval = 0
 let interval, paused, tray
-let timeRemaining = intervals[currentInterval]
+let timeRemaining = intervals[currentInterval].length
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -47,9 +44,20 @@ const createWindow = () => {
   })
 }
 
+const getNextIntervalIndex = () => (currentInterval + 1) % intervals.length
+
+const showCompletionNotification = () =>
+  new Notification({
+    title: `${ intervals[currentInterval].title } complete! ` +
+      `Starting ${ intervals[getNextIntervalIndex()].title } segment.`
+  }).show()
+
 const createInterval = () =>
   setInterval(() => {
     if (paused) return
+    if (timeRemaining === 0) {
+      showCompletionNotification()
+    }
     if (timeRemaining < 0) {
       nextInterval()
     }
@@ -73,7 +81,7 @@ const buildTray = () => {
 const sendTime = () => {
   mainWindow.webContents.send('time', {
     timeRemaining,
-    intervalLength: intervals[currentInterval]
+    intervalLength: intervals[currentInterval].length
   })
 }
 
@@ -84,8 +92,8 @@ const sendPaused = () => {
 }
 
 const nextInterval = () => {
-  currentInterval = (currentInterval + 1) % 2
-  timeRemaining = intervals[currentInterval]
+  currentInterval = getNextIntervalIndex()
+  timeRemaining = intervals[currentInterval].length
 }
 
 app.on('ready', () => {
