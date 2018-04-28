@@ -2,7 +2,7 @@
   "name": "timer",
   "version": "0.1.0",
   "private": true,
-  "main": "src/startElectron.js",
+  "main": "src/electron/main.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
