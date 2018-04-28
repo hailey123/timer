@@ -4,7 +4,7 @@ const electron = require('electron');
 const path = require('path');
 const url = require('url');
 
-const { app, BrowserWindow, Tray } = electron
+const { app, BrowserWindow, ipcMain, Tray } = electron
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,9 +32,23 @@ const createWindow = () => {
   })
 }
 
-let tray;
+const intervals = [15, 10]
+let currentInterval = 0
+let interval, timeRemaining, tray
 app.on('ready', () => {
   createWindow()
+
+  timeRemaining = intervals[currentInterval]
+  interval = setInterval(() => {
+    if (timeRemaining < 0) {
+      // Go to next interval
+      currentInterval = (currentInterval + 1) % 2
+      timeRemaining = intervals[currentInterval]
+    }
+    mainWindow.webContents.send('time', {
+      value: timeRemaining--
+    })
+  }, 1000)
   tray = new Tray('src/assets/hourglass.png')
 });
 
@@ -53,4 +67,10 @@ app.on('activate', function () {
     if (mainWindow === null) {
         createWindow()
     }
+})
+
+ipcMain.on('reset', () => {
+  console.log('time remaining', timeRemaining)
+  // TODO: pause
+  timeRemaining = intervals[currentInterval]
 })

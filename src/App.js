@@ -7,6 +7,11 @@ import {
   DEFAULT_WORK_TIME
 } from './constants'
 
+/* Electron */
+const electron = window.require('electron');
+const fs = electron.remote.require('fs');
+const ipcRenderer  = electron.ipcRenderer;
+
 const timeSegments = [
   {
     name: 'Work',
@@ -28,18 +33,12 @@ class App extends Component {
     this.setState({
       timeRemaining: timeSegments[this.state.currentSegment].length
     })
-    this.interval = setInterval(() => {
-      const { currentSegment, timeRemaining } = this.state
-      if (!this.state.timerPaused) {
-        if (timeRemaining > 0) {
-          this.setState({
-            timeRemaining: timeRemaining - 1
-          })
-        } else {
-          this.goToNextInterval()
-        }
-      }
-    }, 1000)
+    ipcRenderer.on('time', (event, time) => {
+      console.log(time)
+      this.setState({
+        timeRemaining: time.value
+      })
+    })
   }
   componentWillUnmount() {
     clearInterval(this.interval)
@@ -48,14 +47,9 @@ class App extends Component {
     const { currentSegment } = this.state
     return timeSegments[currentSegment].length
   }
-  goToNextInterval = () => {
-    const { currentSegment } = this.state
-    const numSegments = timeSegments.length
-    const nextSegment = (currentSegment + 1) % numSegments
-    this.setState({
-      currentSegment: nextSegment,
-      timeRemaining: timeSegments[nextSegment].length
-    })
+  handleResetClick = () => {
+    console.log('sending reset')
+    ipcRenderer.send('reset')
   }
   formatTime = timeRemaining => {
     const date = new Date(null)
@@ -96,13 +90,10 @@ class App extends Component {
             { timerPaused ? 'Go' : 'Pause' }
           </button>
           <button className='btn'
-            onClick={ () => this.setState({
-              timeRemaining: timeSegments[currentSegment].length,
-              timerPaused: true
-            }) }>
+            onClick={ this.handleResetClick }>
             Reset</button>
           <button className='btn'
-            onClick = { this.goToNextInterval }>
+            onClick = { () => console.log('todo - handle next') }>
             Next
           </button>
         </div>
