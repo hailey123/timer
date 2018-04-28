@@ -6,7 +6,13 @@ const url = require('url')
 const { formatTime } = require('../common/timeUtils')
 const constants = require('../common/constants')
 
-const { app, BrowserWindow, ipcMain, Tray } = electron
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  Tray
+} = electron
 
 const intervals = [
   constants.DEFAULT_WORK_TIME,
@@ -52,6 +58,18 @@ const createInterval = () =>
     timeRemaining--
   }, 1000)
 
+const buildTray = () => {
+  const tray = new Tray('src/assets/hourglass.png')
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      click() { app.quit() }
+    }
+  ])
+  tray.setContextMenu(contextMenu)
+  return tray
+}
+
 const sendTime = () => {
   mainWindow.webContents.send('time', {
     timeRemaining,
@@ -74,7 +92,7 @@ app.on('ready', () => {
   createWindow()
   sendTime()
   interval = createInterval()
-  tray = new Tray('src/assets/hourglass.png')
+  tray = buildTray()
 })
 
 // Quit when all windows are closed.
