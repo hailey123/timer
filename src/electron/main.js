@@ -3,6 +3,7 @@
 const electron = require('electron')
 const path = require('path')
 const url = require('url')
+const { formatTime } = require('../common/timeUtils')
 const constants = require('../common/constants')
 
 const { app, BrowserWindow, ipcMain, Tray } = electron
@@ -47,7 +48,7 @@ const createInterval = () =>
       nextInterval()
     }
     sendTime()
-    tray.setToolTip('' + timeRemaining)
+    tray.setToolTip(formatTime(timeRemaining))
     timeRemaining--
   }, 1000)
 

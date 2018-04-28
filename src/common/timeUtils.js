@@ -1,4 +1,4 @@
-export const formatTime = seconds => {
+const formatTime = seconds => {
   const date = new Date(null)
   date.setSeconds(seconds)
   return seconds >= 3600
@@ -6,9 +6,14 @@ export const formatTime = seconds => {
     : date.toISOString().substr(14, 5)
 }
 
-export const calculateIntervalCompletionPercentage = (
+const calculateIntervalCompletionPercentage = (
   timeRemaining,
   intervalLength
 ) => {
   return timeRemaining / intervalLength * 100
+}
+
+module.exports = {
+  formatTime,
+  calculateIntervalCompletionPercentage
 }
