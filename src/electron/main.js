@@ -3,7 +3,7 @@
 const electron = require('electron')
 const path = require('path')
 const url = require('url')
-const constants = require('./constants')
+const constants = require('../common/constants')
 
 const { app, BrowserWindow, ipcMain, Tray } = electron
 
@@ -26,7 +26,7 @@ const createWindow = () => {
   })
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
-    pathname: path.join(__dirname, '/../build/index.html'),
+    pathname: path.join(__dirname, '/../../build/index.html'),
     protocol: 'file:',
     slashes: true
   })
@@ -47,6 +47,7 @@ const createInterval = () =>
       nextInterval()
     }
     sendTime()
+    tray.setToolTip('' + timeRemaining)
     timeRemaining--
   }, 1000)
 

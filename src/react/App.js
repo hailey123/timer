@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 
-import logo from './logo.svg'
 import './App.css'
 
 /* Electron */
 const electron = window.require('electron');
-const fs = electron.remote.require('fs');
 const ipcRenderer  = electron.ipcRenderer;
 
 class App extends Component {
@@ -42,7 +40,7 @@ class App extends Component {
     return timeRemaining / intervalLength * 100
   }
   render() {
-    const { timerPaused, timeRemaining } = this.state
+    const { timerPaused } = this.state
     const completionPercentatage = this.calculateCompletionPercentage()
     return (
       <div className='App'>
