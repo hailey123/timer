@@ -6,6 +6,11 @@ const url = require('url');
 
 const { app, BrowserWindow, ipcMain, Tray } = electron
 
+const intervals = [15, 10]
+let currentInterval = 0
+let interval, paused, tray
+let timeRemaining = intervals[currentInterval]
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -32,23 +37,38 @@ const createWindow = () => {
   })
 }
 
-const intervals = [15, 10]
-let currentInterval = 0
-let interval, timeRemaining, tray
+const createInterval = () =>
+  setInterval(() => {
+    if (paused) return
+    if (timeRemaining < 0) {
+      nextInterval()
+    }
+    sendTime()
+    timeRemaining--
+  }, 1000)
+
+const sendTime = () => {
+  mainWindow.webContents.send('time', {
+    timeRemaining,
+    intervalLength: intervals[currentInterval]
+  })
+}
+
+const sendPaused = () => {
+  mainWindow.webContents.send('play-pause', {
+    timerPaused: paused
+  })
+}
+
+const nextInterval = () => {
+  currentInterval = (currentInterval + 1) % 2
+  timeRemaining = intervals[currentInterval]
+}
+
 app.on('ready', () => {
   createWindow()
-
-  timeRemaining = intervals[currentInterval]
-  interval = setInterval(() => {
-    if (timeRemaining < 0) {
-      // Go to next interval
-      currentInterval = (currentInterval + 1) % 2
-      timeRemaining = intervals[currentInterval]
-    }
-    mainWindow.webContents.send('time', {
-      value: timeRemaining--
-    })
-  }, 1000)
+  sendTime()
+  interval = createInterval()
   tray = new Tray('src/assets/hourglass.png')
 });
 
@@ -70,7 +90,18 @@ app.on('activate', function () {
 })
 
 ipcMain.on('reset', () => {
-  console.log('time remaining', timeRemaining)
-  // TODO: pause
   timeRemaining = intervals[currentInterval]
+  sendTime()
+  paused = true
+  sendPaused()
+})
+
+ipcMain.on('play-pause', () => {
+  paused = !paused
+  sendPaused()
+})
+
+ipcMain.on('next', () => {
+  nextInterval()
+  sendTime()
 })

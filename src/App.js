@@ -2,56 +2,35 @@ import React, { Component } from 'react'
 
 import logo from './logo.svg'
 import './App.css'
-import {
-  DEFAULT_BREAK_TIME,
-  DEFAULT_WORK_TIME
-} from './constants'
 
 /* Electron */
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
 const ipcRenderer  = electron.ipcRenderer;
 
-const timeSegments = [
-  {
-    name: 'Work',
-    length: DEFAULT_WORK_TIME
-  },
-  {
-    name: 'Break',
-    length: DEFAULT_BREAK_TIME
-  }
-]
-
 class App extends Component {
-  state = {
-    currentSegment: 0,
-    timeRemaining: 0,
-    timerPaused: false
-  }
+  state = { timerPaused: false, timeRemaining: 0 }
   componentDidMount() {
-    this.setState({
-      timeRemaining: timeSegments[this.state.currentSegment].length
-    })
-    ipcRenderer.on('time', (event, time) => {
-      console.log(time)
-      this.setState({
-        timeRemaining: time.value
-      })
+    ipcRenderer.on('play-pause', (event, { timerPaused }) =>
+      this.setState({ timerPaused }))
+    ipcRenderer.on('time', (event, { timeRemaining, intervalLength }) => {
+      this.setState({ timeRemaining, intervalLength })
     })
   }
   componentWillUnmount() {
     clearInterval(this.interval)
   }
-  getCurrentIntervalLength = () => {
-    const { currentSegment } = this.state
-    return timeSegments[currentSegment].length
+  handlePlayPauseClick = () => {
+    ipcRenderer.send('play-pause')
   }
   handleResetClick = () => {
-    console.log('sending reset')
     ipcRenderer.send('reset')
   }
-  formatTime = timeRemaining => {
+  handleNextClick = () => {
+    ipcRenderer.send('next')
+  }
+  getFormattedTime = () => {
+    const { timeRemaining } = this.state
     const date = new Date(null)
     date.setSeconds(timeRemaining)
     return timeRemaining >= 3600
@@ -59,15 +38,11 @@ class App extends Component {
       : date.toISOString().substr(14, 5)
   }
   calculateCompletionPercentage = () => {
-    const { currentSegment, timeRemaining } = this.state
-    return timeRemaining / this.getCurrentIntervalLength() * 100
+    const { timeRemaining, intervalLength } = this.state
+    return timeRemaining / intervalLength * 100
   }
   render() {
-    const {
-      currentSegment,
-      timerPaused,
-      timeRemaining
-    } = this.state
+    const { timerPaused, timeRemaining } = this.state
     const completionPercentatage = this.calculateCompletionPercentage()
     return (
       <div className='App'>
@@ -80,20 +55,18 @@ class App extends Component {
               rgb(0, 0, 102) ${ completionPercentatage }%
             )`
           } }>
-          <h1>{ this.formatTime(timeRemaining) }</h1>
+          <h1>{ this.getFormattedTime() }</h1>
         </div>
         <div className='btnContainer'>
           <button className='btn'
-            onClick={ () => this.setState({
-              timerPaused: !timerPaused
-            }) }>
+            onClick={ this.handlePlayPauseClick }>
             { timerPaused ? 'Go' : 'Pause' }
           </button>
           <button className='btn'
             onClick={ this.handleResetClick }>
             Reset</button>
           <button className='btn'
-            onClick = { () => console.log('todo - handle next') }>
+            onClick = { this.handleNextClick }>
             Next
           </button>
         </div>
