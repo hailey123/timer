@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-import './App.css';
 import Countdown from '../Countdown';
 import ButtonPanel from '../ButtonPanel';
+
+import './App.css';
 
 let ipcRenderer;
 

@@ -1,5 +1,3 @@
-// https://medium.freecodecamp.org/building-an-electron-application-with-create-react-app-97945861647c
-
 const electron = require('electron');
 const path = require('path');
 const url = require('url');
