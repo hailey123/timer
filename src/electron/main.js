@@ -22,7 +22,7 @@ let timeRemaining = intervals[currentInterval].length;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-const createWindow = () => {
+function createWindow() {
   mainWindow = new BrowserWindow({
     width: 170,
     height: 218,
@@ -45,29 +45,33 @@ const createWindow = () => {
   });
 };
 
-const getNextIntervalIndex = () => (currentInterval + 1) % intervals.length;
+function getNextIntervalIndex() {
+  return (currentInterval + 1) % intervals.length;
+}
 
-const showCompletionNotification = () =>
-  new Notification({
+function showCompletionNotification() {
+  return new Notification({
     title: `${intervals[currentInterval].title} complete! Starting ` +
       `${intervals[getNextIntervalIndex()].title.toLowerCase()} segment.`
   }).show();
+}
 
-const createInterval = () =>
-  setInterval(() => {
+function createInterval() {
+  return setInterval(() => {
     if (paused) return;
     if (timeRemaining === 0) {
       showCompletionNotification();
     }
     if (timeRemaining < 0) {
-      nextInterval();
+      advanceToNextInterval();
     }
     sendTime();
     tray.setToolTip(formatTime(timeRemaining));
-    timeRemaining--;
+    timeRemaining -= 1;
   }, 1000);
+}
 
-const buildTray = () => {
+function buildTray() {
   const tray = new Tray('src/assets/hourglass.png');
   const contextMenu = Menu.buildFromTemplate([
     {
@@ -79,7 +83,7 @@ const buildTray = () => {
   return tray;
 };
 
-const sendTime = () => {
+function sendTime() {
   if (mainWindow) {
     mainWindow.webContents.send('time', {
       timeRemaining,
@@ -88,7 +92,7 @@ const sendTime = () => {
   }
 };
 
-const sendPaused = () => {
+function sendPaused() {
   if (mainWindow) {
     mainWindow.webContents.send('play-pause', {
       timerPaused: paused
@@ -96,7 +100,7 @@ const sendPaused = () => {
   }
 };
 
-const nextInterval = () => {
+function advanceToNextInterval() {
   currentInterval = getNextIntervalIndex();
   timeRemaining = intervals[currentInterval].length;
 };
@@ -138,7 +142,7 @@ ipcMain.on('play-pause', () => {
 });
 
 ipcMain.on('next', () => {
-  nextInterval();
+  advanceToNextInterval();
   sendTime();
 });
 

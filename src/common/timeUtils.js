@@ -1,4 +1,4 @@
-const formatTime = seconds => {
+function formatTime(seconds) {
   const date = new Date(null);
   date.setSeconds(seconds);
   return seconds >= 3600
@@ -6,10 +6,10 @@ const formatTime = seconds => {
     : date.toISOString().substr(14, 5);
 };
 
-const calculateIntervalCompletionPercentage = (
+function calculateIntervalCompletionPercentage(
   timeRemaining,
   intervalLength
-) => {
+) {
   return timeRemaining / intervalLength * 100;
 };
 
