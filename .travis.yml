@@ -7,3 +7,6 @@ jobs:
     - stage: Produce Coverage
       node_js: node
       script: npm test -- --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
+      
+notifications:
+  email: false
