@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 
-import {
-  formatTime,
-  calculateIntervalCompletionPercentage
-} from '../../common/timeUtils';
+import Countdown from '../Countdown';
+import ButtonPanel from '../ButtonPanel';
 
 import './App.css';
 
 let ipcRenderer;
 
 class App extends Component {
-  state = { timerPaused: false, timeRemaining: 0 }
+  state = { timerPaused: false, timeRemaining: 0, intervalLength: 0 }
   componentWillMount() {
     const electron = window.require('electron');
     ipcRenderer = electron.ipcRenderer;
@@ -33,36 +31,14 @@ class App extends Component {
   }
   render() {
     const { intervalLength, timerPaused, timeRemaining } = this.state;
-    const completionPercentage = calculateIntervalCompletionPercentage(
-      timeRemaining,
-      intervalLength
-    );
     return (
-      <div className='App'>
-        <div className='Countdown'
-          style={{
-            background: `linear-gradient(
-              to bottom,
-              rgb(0, 51, 102),
-              rgb(0, 51, 102) ${ completionPercentage}%,
-              rgb(0, 0, 102) ${ completionPercentage}%
-            )`
-          }}>
-          <h1>{formatTime(timeRemaining)}</h1>
-        </div>
-        <div className='btnContainer'>
-          <button className='btn'
-            onClick={this.handlePlayPauseClick}>
-            {timerPaused ? 'Go' : 'Pause'}
-          </button>
-          <button className='btn'
-            onClick={this.handleResetClick}>
-            Reset</button>
-          <button className='btn'
-            onClick={this.handleNextClick}>
-            Next
-          </button>
-        </div>
+      <div className='app'>
+        <Countdown timeRemaining={timeRemaining} intervalLength={intervalLength} />
+        <ButtonPanel
+          timerPaused={timerPaused}
+          onPlayPauseClick={this.handlePlayPauseClick}
+          onResetClick={this.handleResetClick}
+          onNextClick={this.handleNextClick} />
       </div>
     );
   }
