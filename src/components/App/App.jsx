@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './App.css';
 import Countdown from '../Countdown';
+import ButtonPanel from '../ButtonPanel';
 
 let ipcRenderer;
 
@@ -32,19 +33,11 @@ class App extends Component {
     return (
       <div className='app'>
         <Countdown timeRemaining={timeRemaining} intervalLength={intervalLength} />
-        <div className='button-panel'>
-          <button className=''
-            onClick={this.handlePlayPauseClick}>
-            {timerPaused ? 'Go' : 'Pause'}
-          </button>
-          <button className='panel-button'
-            onClick={this.handleResetClick}>
-            Reset</button>
-          <button className='panel-button'
-            onClick={this.handleNextClick}>
-            Next
-          </button>
-        </div>
+        <ButtonPanel
+          timerPaused={timerPaused}
+          onPlayPauseClick={this.handlePlayPauseClick}
+          onResetClick={this.handleResetClick}
+          onNextClick={this.handleNextClick} />
       </div>
     );
   }
