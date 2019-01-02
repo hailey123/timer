@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import App from './App';
 
 window.require = jest.fn().mockReturnValue({
@@ -12,15 +11,20 @@ window.require = jest.fn().mockReturnValue({
 });
 
 describe('App', () => {
+  let wrapper;
 
-  it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<App />, div);
-    ReactDOM.unmountComponentAtNode(div);
+  beforeEach(() => {
+    wrapper = shallow(<App />);
   });
+
   it('has the correct className for styling', () => {
-    const wrapper = shallow(<App />);
     expect(wrapper.hasClass('app')).toBeTruthy();
+  });
+  it('has a Countdown', () => {
+    expect(wrapper.find('Countdown').length).toBe(1);
+  });
+  it('has a ButtonPanel', () => {
+    expect(wrapper.find('ButtonPanel').length).toBe(1);
   });
 });
 
