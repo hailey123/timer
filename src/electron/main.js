@@ -40,7 +40,7 @@ const createWindow = () => {
   // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
-      mainWindow = null
+    mainWindow = null
   })
 }
 
@@ -48,8 +48,8 @@ const getNextIntervalIndex = () => (currentInterval + 1) % intervals.length
 
 const showCompletionNotification = () =>
   new Notification({
-    title: `${ intervals[currentInterval].title } complete! Starting ` +
-      `${ intervals[getNextIntervalIndex()].title.toLowerCase() } segment.`
+    title: `${intervals[currentInterval].title} complete! Starting ` +
+      `${intervals[getNextIntervalIndex()].title.toLowerCase()} segment.`
   }).show()
 
 const createInterval = () =>
@@ -109,19 +109,19 @@ app.on('ready', () => {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
 
 app.on('activate', function () {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-        createWindow()
-    }
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    createWindow()
+  }
 })
 
 ipcMain.on('reset', () => {
