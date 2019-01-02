@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 import {
   formatTime,
   calculateIntervalCompletionPercentage
-} from '../common/timeUtils'
+} from '../../common/timeUtils';
 
-import './App.css'
+import './App.css';
 
 let ipcRenderer;
 
@@ -17,26 +17,26 @@ class App extends Component {
   }
   componentDidMount() {
     ipcRenderer.on('play-pause', (_event, { timerPaused }) =>
-      this.setState({ timerPaused }))
+      this.setState({ timerPaused }));
     ipcRenderer.on('time', (_event, { timeRemaining, intervalLength }) => {
-      this.setState({ timeRemaining, intervalLength })
-    })
+      this.setState({ timeRemaining, intervalLength });
+    });
   }
   handlePlayPauseClick = () => {
-    ipcRenderer.send('play-pause')
+    ipcRenderer.send('play-pause');
   }
   handleResetClick = () => {
-    ipcRenderer.send('reset')
+    ipcRenderer.send('reset');
   }
   handleNextClick = () => {
-    ipcRenderer.send('next')
+    ipcRenderer.send('next');
   }
   render() {
-    const { intervalLength, timerPaused, timeRemaining } = this.state
+    const { intervalLength, timerPaused, timeRemaining } = this.state;
     const completionPercentage = calculateIntervalCompletionPercentage(
       timeRemaining,
       intervalLength
-    )
+    );
     return (
       <div className='App'>
         <div className='Countdown'
@@ -68,4 +68,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;

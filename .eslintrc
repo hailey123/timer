@@ -1,0 +1,7 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "semi": "warn",
+    "no-undef": "off"
+  }
+}
