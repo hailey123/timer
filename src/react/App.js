@@ -7,11 +7,15 @@ import {
 import './App.css'
 
 /* Electron */
-const electron = window.require('electron');
-const ipcRenderer = electron.ipcRenderer;
+let ipcRenderer;
 
 class App extends Component {
   state = { timerPaused: false, timeRemaining: 0 }
+
+  componentWillMount() {
+    const electron = window.require('electron');
+    ipcRenderer = electron.ipcRenderer;
+  }
   componentDidMount() {
     ipcRenderer.on('play-pause', (event, { timerPaused }) =>
       this.setState({ timerPaused }))

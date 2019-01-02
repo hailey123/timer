@@ -7,6 +7,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "test:coverage": "npm test -- --coverage",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron:dev": "set ELECTRON_START_URL=http://localhost:3000 && electron ."
@@ -17,6 +18,9 @@
     "react-scripts": "1.1.4"
   },
   "devDependencies": {
-    "electron": "^1.8.4"
+    "coveralls": "3.0.2",
+    "electron": "^1.8.4",
+    "enzyme": "3.8.0",
+    "enzyme-adapter-react-16": "1.7.1"
   }
 }

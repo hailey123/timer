@@ -1,9 +1,12 @@
+[![Build Status](https://travis-ci.com/hailey123/timer.svg?branch=master)](https://travis-ci.com/hailey123/timer)
+[![Coverage Status](https://coveralls.io/repos/github/hailey123/timer/badge.svg?branch=master)](https://coveralls.io/github/hailey123/timer?branch=master)
+
 # Timer
 This cross-platform desktop timer consists of two repeating segments: a work segment and a break segment. It sits on your desktop and in the task bar so you can easily view the current countdown time while working on your computer. It is built with [Electron](https://electronjs.org) and [React](https://reactjs.org).
 
 ## Install
 1. Clone this repository
-1. `npm i` in the root directory
+1. `npm install` in the root directory
 
 ## Run
 
