@@ -8,7 +8,7 @@ import './App.css'
 
 /* Electron */
 const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
+const ipcRenderer = electron.ipcRenderer;
 
 class App extends Component {
   state = { timerPaused: false, timeRemaining: 0 }
@@ -30,33 +30,33 @@ class App extends Component {
   }
   render() {
     const { intervalLength, timerPaused, timeRemaining } = this.state
-    const completionPercentatage = calculateIntervalCompletionPercentage(
+    const completionPercentage = calculateIntervalCompletionPercentage(
       timeRemaining,
       intervalLength
     )
     return (
       <div className='App'>
         <div className='Countdown'
-          style={ {
+          style={{
             background: `linear-gradient(
               to bottom,
               rgb(0, 51, 102),
-              rgb(0, 51, 102) ${ completionPercentatage }%,
-              rgb(0, 0, 102) ${ completionPercentatage }%
+              rgb(0, 51, 102) ${ completionPercentage}%,
+              rgb(0, 0, 102) ${ completionPercentage}%
             )`
-          } }>
-          <h1>{ formatTime(timeRemaining) }</h1>
+          }}>
+          <h1>{formatTime(timeRemaining)}</h1>
         </div>
         <div className='btnContainer'>
           <button className='btn'
-            onClick={ this.handlePlayPauseClick }>
-            { timerPaused ? 'Go' : 'Pause' }
+            onClick={this.handlePlayPauseClick}>
+            {timerPaused ? 'Go' : 'Pause'}
           </button>
           <button className='btn'
-            onClick={ this.handleResetClick }>
+            onClick={this.handleResetClick}>
             Reset</button>
           <button className='btn'
-            onClick = { this.handleNextClick }>
+            onClick={this.handleNextClick}>
             Next
           </button>
         </div>
