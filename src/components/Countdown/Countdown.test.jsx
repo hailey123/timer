@@ -11,6 +11,6 @@ describe('Countdown', () => {
     };
     const wrapper = shallow(<Countdown {...props} />);
 
-    expect(wrapper.hasClass('Countdown')).toBeTruthy();
+    expect(wrapper.hasClass('countdown')).toBeTruthy();
   });
 });

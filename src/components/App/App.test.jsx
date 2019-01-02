@@ -12,11 +12,6 @@ window.require = jest.fn().mockReturnValue({
 });
 
 describe('App', () => {
-  const mockState = {
-    intervalLength: 60,
-    timeRemaining: 10,
-    timerPaused: false
-  };
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
@@ -25,7 +20,7 @@ describe('App', () => {
   });
   it('has the correct className for styling', () => {
     const wrapper = shallow(<App />);
-    expect(wrapper.hasClass('App')).toBeTruthy();
+    expect(wrapper.hasClass('app')).toBeTruthy();
   });
 });
 

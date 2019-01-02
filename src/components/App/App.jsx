@@ -30,17 +30,17 @@ class App extends Component {
   render() {
     const { intervalLength, timerPaused, timeRemaining } = this.state;
     return (
-      <div className='App'>
+      <div className='app'>
         <Countdown timeRemaining={timeRemaining} intervalLength={intervalLength} />
-        <div className='btnContainer'>
-          <button className='btn'
+        <div className='button-panel'>
+          <button className=''
             onClick={this.handlePlayPauseClick}>
             {timerPaused ? 'Go' : 'Pause'}
           </button>
-          <button className='btn'
+          <button className='panel-button'
             onClick={this.handleResetClick}>
             Reset</button>
-          <button className='btn'
+          <button className='panel-button'
             onClick={this.handleNextClick}>
             Next
           </button>

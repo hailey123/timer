@@ -17,7 +17,7 @@ const Countdown = ({
     intervalLength
   );
   return (
-    <div className='Countdown'
+    <div className='countdown'
       style={{
         background: `linear-gradient(
               to bottom,

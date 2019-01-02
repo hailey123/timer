@@ -1,13 +1,13 @@
-.btn {
+.button-panel {
+  display: flex;
+}
+
+.panel-button {
   flex: 1;
   height: 25px;
   padding: 0;
 }
 
-.btn.wide {
+.panel-button.wide {
   width: 100%;
-}
-
-.btnContainer {
-  display: flex;
 }
