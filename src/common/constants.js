@@ -1,4 +1,4 @@
-const ONE_MINUTE = 60
+const ONE_MINUTE = 60;
 
 module.exports = {
   intervals: [
@@ -11,4 +11,4 @@ module.exports = {
       length: 10 * ONE_MINUTE
     }
   ]
-}
+};
