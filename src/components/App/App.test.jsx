@@ -12,6 +12,12 @@ window.require = jest.fn().mockReturnValue({
 });
 
 describe('App', () => {
+  const mockState = {
+    intervalLength: 60,
+    timeRemaining: 10,
+    timerPaused: false
+  };
+
   it('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<App />, div);
