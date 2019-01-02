@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.com/hailey123/timer.svg?branch=master)](https://travis-ci.com/hailey123/timer)
-[![Coverage Status](https://coveralls.io/repos/github/hailey123/timer/badge.svg?branch=master)](https://coveralls.io/github/hailey123/timer?branch=master)
+
+
+[![Coverage Status](https://coveralls.io/repos/github/hailey123/timer/badge.svg?branch=master)](https://coveralls.io/github/hailey123/timer?branch=master) <- Goal is to improve this ASAP!
 
 # Timer
 This cross-platform desktop timer consists of two repeating segments: a work segment and a break segment. It sits on your desktop and in the task bar so you can easily view the current countdown time while working on your computer. It is built with [Electron](https://electronjs.org) and [React](https://reactjs.org) ([create-react-app](https://github.com/facebook/create-react-app)).
