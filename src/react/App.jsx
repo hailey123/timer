@@ -4,22 +4,21 @@ import {
   formatTime,
   calculateIntervalCompletionPercentage
 } from '../common/timeUtils'
+
 import './App.css'
 
-/* Electron */
 let ipcRenderer;
 
 class App extends Component {
   state = { timerPaused: false, timeRemaining: 0 }
-
   componentWillMount() {
     const electron = window.require('electron');
     ipcRenderer = electron.ipcRenderer;
   }
   componentDidMount() {
-    ipcRenderer.on('play-pause', (event, { timerPaused }) =>
+    ipcRenderer.on('play-pause', (_event, { timerPaused }) =>
       this.setState({ timerPaused }))
-    ipcRenderer.on('time', (event, { timeRemaining, intervalLength }) => {
+    ipcRenderer.on('time', (_event, { timeRemaining, intervalLength }) => {
       this.setState({ timeRemaining, intervalLength })
     })
   }
