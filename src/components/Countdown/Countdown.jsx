@@ -6,6 +6,8 @@ import {
   calculateIntervalCompletionPercentage
 } from '../../common/timeUtils';
 
+import './Countdown.css';
+
 const Countdown = ({
   timeRemaining,
   intervalLength
