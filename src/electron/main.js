@@ -1,6 +1,6 @@
 const electron = require('electron');
-const path = require('path');
-const url = require('url');
+// const path = require('path');
+// const url = require('url');
 const { formatTime } = require('../common/timeUtils');
 const { Intervals } = require('../common/constants');
 
@@ -13,10 +13,9 @@ const {
   Tray
 } = electron;
 
-let currentInterval = 0;
-let paused = true;
+let currentIntervalIndex = 0;
 let interval, tray;
-let timeRemaining = Intervals[currentInterval].length;
+let timeRemaining = Intervals[currentIntervalIndex].length;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -28,11 +27,11 @@ function createWindow() {
     resizable: false
   });
 
-  const startUrl = process.env.ELECTRON_START_URL || url.format({
-    pathname: path.join(__dirname, '/../../build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  });
+  // const startUrl = process.env.ELECTRON_START_URL || url.format({
+  //   pathname: path.join(__dirname, '/../../build/index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // });
 
   // Load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000');
@@ -45,28 +44,32 @@ function createWindow() {
 };
 
 function getNextIntervalIndex() {
-  return (currentInterval + 1) % Intervals.length;
+  return (currentIntervalIndex + 1) % Intervals.length;
 }
 
 function showCompletionNotification() {
   return new Notification({
-    title: `${Intervals[currentInterval].title} complete! Starting ` +
+    title: `${Intervals[currentIntervalIndex].title} complete! Starting ` +
       `${Intervals[getNextIntervalIndex()].title.toLowerCase()} segment.`
   }).show();
 }
 
-function createInterval() {
+function updateTime() {
+  sendTime();
+  tray.setToolTip(formatTime(timeRemaining));
+}
+
+function startInterval() {
   return setInterval(() => {
-    if (paused) return;
-    if (timeRemaining === 0) {
+    if (timeRemaining <= 0) {
+      advanceToNextInterval();
+      return;
+    }
+    timeRemaining -= 1;
+    if (timeRemaining <= 0) {
       showCompletionNotification();
     }
-    if (timeRemaining < 0) {
-      advanceToNextInterval();
-    }
-    sendTime();
-    tray.setToolTip(formatTime(timeRemaining));
-    timeRemaining -= 1;
+    updateTime();
   }, 1000);
 }
 
@@ -86,29 +89,57 @@ function sendTime() {
   if (mainWindow) {
     mainWindow.webContents.send('time', {
       timeRemaining,
-      intervalLength: Intervals[currentInterval].length
+      intervalLength: Intervals[currentIntervalIndex].length
     });
   }
 };
 
-function sendPaused() {
+function sendIsPaused() {
   if (mainWindow) {
     mainWindow.webContents.send('play-pause', {
-      timerPaused: paused
+      timerPaused: isPaused()
     });
   }
 };
 
 function advanceToNextInterval() {
-  currentInterval = getNextIntervalIndex();
-  timeRemaining = Intervals[currentInterval].length;
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
+
+  currentIntervalIndex = getNextIntervalIndex();
+  timeRemaining = Intervals[currentIntervalIndex].length;
+  updateTime();
+
+  if (!interval) {
+    interval = startInterval();
+  }
 };
+
+function play() {
+  interval = startInterval();
+
+  // Never let timeRemaining go below 0, which could otherwise happen if
+  // the user spams the play/pause button
+  timeRemaining = Math.max(timeRemaining - 1, 0);
+
+  updateTime();
+}
+
+function pause() {
+  clearInterval(interval);
+  interval = null;
+}
+
+function isPaused() {
+  return !interval;
+}
 
 app.on('ready', () => {
   createWindow();
   tray = buildTray();
-  sendTime();
-  interval = createInterval();
+  updateTime();
 });
 
 // Quit when all windows are closed.
@@ -129,15 +160,20 @@ app.on('activate', function () {
 });
 
 ipcMain.on('reset', () => {
-  timeRemaining = Intervals[currentInterval].length;
+  timeRemaining = Intervals[currentIntervalIndex].length;
   sendTime();
-  paused = true;
-  sendPaused();
+
+  pause();
+  sendIsPaused();
 });
 
 ipcMain.on('play-pause', () => {
-  paused = !paused;
-  sendPaused();
+  if (isPaused()) {
+    play();
+  } else {
+    pause();
+  }
+  sendIsPaused();
 });
 
 ipcMain.on('next', () => {
@@ -147,4 +183,5 @@ ipcMain.on('next', () => {
 
 app.on('will-quit', function () {
   clearInterval(interval);
+  interval = null;
 });
