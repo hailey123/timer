@@ -2,7 +2,7 @@ const electron = require('electron');
 const path = require('path');
 const url = require('url');
 const { formatTime } = require('../common/timeUtils');
-const { intervals } = require('../common/constants');
+const { Intervals } = require('../common/constants');
 
 const {
   app,
@@ -14,8 +14,9 @@ const {
 } = electron;
 
 let currentInterval = 0;
-let interval, paused, tray;
-let timeRemaining = intervals[currentInterval].length;
+let paused = true;
+let interval, tray;
+let timeRemaining = Intervals[currentInterval].length;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -44,13 +45,13 @@ function createWindow() {
 };
 
 function getNextIntervalIndex() {
-  return (currentInterval + 1) % intervals.length;
+  return (currentInterval + 1) % Intervals.length;
 }
 
 function showCompletionNotification() {
   return new Notification({
-    title: `${intervals[currentInterval].title} complete! Starting ` +
-      `${intervals[getNextIntervalIndex()].title.toLowerCase()} segment.`
+    title: `${Intervals[currentInterval].title} complete! Starting ` +
+      `${Intervals[getNextIntervalIndex()].title.toLowerCase()} segment.`
   }).show();
 }
 
@@ -71,12 +72,12 @@ function createInterval() {
 
 function buildTray() {
   const tray = new Tray('src/assets/hourglass.png');
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Quit',
-      click() { app.quit(); }
+  const contextMenu = Menu.buildFromTemplate([{
+    label: 'Quit',
+    click() {
+      app.quit();
     }
-  ]);
+  }]);
   tray.setContextMenu(contextMenu);
   return tray;
 };
@@ -85,7 +86,7 @@ function sendTime() {
   if (mainWindow) {
     mainWindow.webContents.send('time', {
       timeRemaining,
-      intervalLength: intervals[currentInterval].length
+      intervalLength: Intervals[currentInterval].length
     });
   }
 };
@@ -100,14 +101,14 @@ function sendPaused() {
 
 function advanceToNextInterval() {
   currentInterval = getNextIntervalIndex();
-  timeRemaining = intervals[currentInterval].length;
+  timeRemaining = Intervals[currentInterval].length;
 };
 
 app.on('ready', () => {
   createWindow();
+  tray = buildTray();
   sendTime();
   interval = createInterval();
-  tray = buildTray();
 });
 
 // Quit when all windows are closed.
@@ -128,7 +129,7 @@ app.on('activate', function () {
 });
 
 ipcMain.on('reset', () => {
-  timeRemaining = intervals[currentInterval].length;
+  timeRemaining = Intervals[currentInterval].length;
   sendTime();
   paused = true;
   sendPaused();

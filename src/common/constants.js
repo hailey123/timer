@@ -1,7 +1,7 @@
 const ONE_MINUTE = 60;
 
 module.exports = {
-  intervals: [
+  Intervals: [
     {
       title: 'Work',
       length: 50 * ONE_MINUTE

@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 
 import Countdown from '../Countdown';
 import ButtonPanel from '../ButtonPanel';
+import { Intervals } from '../../common/constants';
 
 import './App.css';
 
 let ipcRenderer;
 
 class App extends Component {
-  state = { timerPaused: false, timeRemaining: 0, intervalLength: 0 }
+  state = { timerPaused: true, timeRemaining: Intervals[0].length, intervalLength: Intervals[0].length }
   componentWillMount() {
     const electron = window.require('electron');
     ipcRenderer = electron.ipcRenderer;
