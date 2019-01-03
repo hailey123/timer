@@ -104,6 +104,8 @@ function sendIsPaused() {
 };
 
 function advanceToNextInterval() {
+  const wasPaused = isPaused();
+
   if (interval) {
     clearInterval(interval);
     interval = null;
@@ -113,7 +115,7 @@ function advanceToNextInterval() {
   timeRemaining = Intervals[currentIntervalIndex].time;
   updateTime();
 
-  if (!interval) {
+  if (!wasPaused) {
     interval = startInterval();
   }
 };
