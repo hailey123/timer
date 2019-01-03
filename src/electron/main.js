@@ -15,7 +15,7 @@ const {
 
 let currentIntervalIndex = 0;
 let interval, tray;
-let timeRemaining = Intervals[currentIntervalIndex].length;
+let timeRemaining = Intervals[currentIntervalIndex].time;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -27,6 +27,7 @@ function createWindow() {
     resizable: false
   });
 
+  // TODO: what is this?
   // const startUrl = process.env.ELECTRON_START_URL || url.format({
   //   pathname: path.join(__dirname, '/../../build/index.html'),
   //   protocol: 'file:',
@@ -89,7 +90,7 @@ function sendTime() {
   if (mainWindow) {
     mainWindow.webContents.send('time', {
       timeRemaining,
-      intervalLength: Intervals[currentIntervalIndex].length
+      intervalLength: Intervals[currentIntervalIndex].time
     });
   }
 };
@@ -109,7 +110,7 @@ function advanceToNextInterval() {
   }
 
   currentIntervalIndex = getNextIntervalIndex();
-  timeRemaining = Intervals[currentIntervalIndex].length;
+  timeRemaining = Intervals[currentIntervalIndex].time;
   updateTime();
 
   if (!interval) {
@@ -160,7 +161,7 @@ app.on('activate', function () {
 });
 
 ipcMain.on('reset', () => {
-  timeRemaining = Intervals[currentIntervalIndex].length;
+  timeRemaining = Intervals[currentIntervalIndex].time;
   sendTime();
 
   pause();

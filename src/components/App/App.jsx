@@ -7,9 +7,14 @@ import { Intervals } from '../../common/constants';
 import './App.css';
 
 let ipcRenderer;
+const firstIntervalLength = Intervals[0].time;
 
 class App extends Component {
-  state = { timerPaused: true, timeRemaining: Intervals[0].length, intervalLength: Intervals[0].length }
+  state = {
+    timerPaused: true,
+    timeRemaining: firstIntervalLength,
+    intervalLength: firstIntervalLength
+  }
   componentWillMount() {
     const electron = window.require('electron');
     ipcRenderer = electron.ipcRenderer;
